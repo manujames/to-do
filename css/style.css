@@ -2,3 +2,29 @@
     margin: 0px;
     padding: 0px;
 }
+
+body{
+    background-color: #1D3557;
+}
+
+.login{
+    margin-top: 30vh;
+}
+.box{
+    background-color: #FFFFFF;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+#toggle-pwd{
+    font-size: small;
+    margin-top: 10px;
+}
+
+.pending-tasks{
+
+}
+
+.completed-tasks{
+ 
+}
