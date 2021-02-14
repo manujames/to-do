@@ -29,14 +29,13 @@ function togglePassword(field){
 }
 
 // Verify username and password
-function validateLogin(input){
-    if(input.username.value === USERNAME && input.password.value === PASSWORD){
+function validateLogin(){
+    let username = $('#username').val();
+    let password = $('#password').val();
+    if(username === USERNAME && password === PASSWORD){
         $('#loginValidationMessage').text("");
         $('.login').attr('hidden',true);
         $('.tasks').attr('hidden',false);
-        // $('.login').css('display','none');
-        // $('.tasks').css('display','block');
-        // $('.tasks').show();
         fetchList(loadList);
         return true;
     }

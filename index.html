@@ -23,7 +23,7 @@
             <div class="row">
                 <div class="col-lg-4 col-sm-3 col-1"></div>
                 <div class="col-lg-4 col-sm-6 col-10 box">
-                    <form action="#" onsubmit="return validateLogin(this);">
+                    <form>
                         <div class="form-group">
                             <label for="username">Username</label>
                             <input type="text" class="form-control" id="username">
@@ -34,7 +34,7 @@
                             <p id="loginValidationMessage"></p>
                             <p id="toggle-pwd" toggleStat="hide" onclick='togglePassword(this);'>Show password <i class="far fa-eye-slash"></i></p>
                         </div>
-                        <button type="submit" class="btn btn-info">Sign in</button>
+                        <button type="button" class="btn btn-info" onclick="return validateLogin();">Sign in</button>
                     </form>
                 </div>
                 <div class="col-lg-4 col-sm-3 col-1"></div>
