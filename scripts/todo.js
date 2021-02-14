@@ -1,5 +1,10 @@
-const username = 'admin';
-const password = '12345';
+const USERNAME = '';
+const PASSWORD = '';
+const URL = 'https://jsonplaceholder.typicode.com/todos';
+var completedTasks = [];
+var pendingTasks = [];
+var tickCount = 0;
+
 $(document).ready(function(){
     
 });
@@ -25,14 +30,116 @@ function togglePassword(field){
 
 // Verify username and password
 function validateLogin(input){
-    if(input.username.value === username && input.password.value === password){
+    if(input.username.value === USERNAME && input.password.value === PASSWORD){
         $('#loginValidationMessage').text("");
-        $('.login').hide();
+        $('.login').attr('hidden',true);
         $('.tasks').attr('hidden',false);
+        // $('.login').css('display','none');
+        // $('.tasks').css('display','block');
+        // $('.tasks').show();
+        fetchList(loadList);
         return true;
     }
     else{
         $('#loginValidationMessage').text("Invalid username or password");
         return false;
+    }
+}
+
+//Fetch list of tasks from api
+function fetchList(callback){
+    $.getJSON(URL,function(response, status){
+        if(status === 'success'){
+            callback(response);
+        }
+        else{
+            // Error handling
+        }
+    });
+}
+
+function loadList(list){
+    for (let i in list){
+        if(list[i].completed){
+            completedTasks.push(list[i]);
+        }
+        else{
+            pendingTasks.push(list[i]);
+        }
+    }
+    displayPendingTasks();
+    displayCompletedTasks();
+}
+
+function refreshLists(){
+    for (let i in pendingTasks){
+        if(pendingTasks[i].completed){
+            completedTasks.unshift(pendingTasks[i]);
+            pendingTasks.splice(i,1);
+        }
+    }
+    displayPendingTasks();
+    displayCompletedTasks();
+}
+
+function displayPendingTasks(){
+    let htmlContent = "<table class='table table-borderless table-hover'>";
+    for(let i in pendingTasks){
+        htmlContent += "<tr>";
+        htmlContent += `<td><input type="checkbox" id=${i} onchange="countCheckBox(this);">`;
+        htmlContent += ` ${pendingTasks[i].title}</td>`;
+        htmlContent += "</tr>";
+    }
+    htmlContent += "</table>";
+    $('.pending-tasks').html(htmlContent);
+}
+
+function displayCompletedTasks(){
+    let htmlContent = "<table class='table table-borderless table-hover'>";
+    for(let i in completedTasks){
+        htmlContent += "<tr>";
+        htmlContent += `<td>${strTruncate(completedTasks[i].title,20)}</td>`;
+        htmlContent += "</tr>";
+    }
+    htmlContent += "</table>";
+    $('.completed-tasks').html(htmlContent);
+}
+
+function countCheckBox(input){
+    doneFiveTasks(input)
+    .then(function(){
+        setTimeout(function(){
+            alert("Yay! You've completed five tasks.");
+            refreshLists();
+        },100)
+    });
+}
+
+function doneFiveTasks(input){
+    return new Promise(function(resolve){
+        if(input.checked){
+            tickCount++;
+            pendingTasks[input.id].completed = true;
+        }
+        else{
+            tickCount--;
+            pendingTasks[input.id].completed = false;
+            if(tickCount < 0){
+                tickCount = 0;
+            }
+        }
+        if(tickCount >= 5){
+            tickCount = 0;
+            resolve();
+        }
+    });
+}
+
+function strTruncate(str,length){
+    if(str.length <= length){
+        return str;
+    }
+    else{
+        return (str.substring(0,length).trim() + '...');
     }
 }
