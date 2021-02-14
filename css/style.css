@@ -7,13 +7,21 @@ body{
     background-color: #1D3557;
 }
 
-.login{
-    margin-top: 30vh;
-}
 .box{
     background-color: #FFFFFF;
     border-radius: 20px;
     padding: 20px;
+}
+
+.login{
+    margin-top: 30vh;
+}
+
+#loginValidationMessage{
+    font-size: small;
+    margin: 1px;
+    color: #dc3545;
+    
 }
 
 #toggle-pwd{
@@ -21,10 +29,14 @@ body{
     margin-top: 10px;
 }
 
+.tasks{
+    margin-top: 15vh;
+    height: 80vh;
+}
 .pending-tasks{
 
 }
 
 .completed-tasks{
- 
+
 }
