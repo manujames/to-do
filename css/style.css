@@ -4,7 +4,7 @@
 }
 
 body{
-    background-color: #1D3557;
+    background-color: #315280;  
 }
 
 .box{
@@ -14,9 +14,16 @@ body{
     margin: 20px;
 }
 
+.boxMessage{
+    color: gray;
+    font-size: large;
+    text-align: center;
+    padding-top: 30vh;
+}
+
 .login{
     max-width: 400px;
-    margin: 15vh auto;
+    margin: 5vh auto;
 }
 
 .login h1{
@@ -48,7 +55,7 @@ body{
 }
 
 .tasks{
-    margin-top: 15vh;
+    margin-top: 5vh;
     height: 80vh;
 }
 

@@ -1,5 +1,5 @@
-const USERNAME = '';
-const PASSWORD = '';
+const USERNAME = 'admin';
+const PASSWORD = '12345';
 const URL = 'https://jsonplaceholder.typicode.com/todos';
 var completedTasks = [];
 var pendingTasks = [];
@@ -35,8 +35,9 @@ function validateLogin(){
     if(username === USERNAME && password === PASSWORD){
         $('#loginValidationMessage').text("");
         $('.login').attr('hidden',true);
+        $('.navbar').attr('hidden',false);
         $('.tasks').attr('hidden',false);
-        fetchList(loadList);
+        fetchList(loadList,errorHandler);
         return true;
     }
     else{
@@ -45,16 +46,36 @@ function validateLogin(){
     }
 }
 
+function logout(){
+    $('#username').val('');
+    $('#password').val('');
+    completedTasks = [];
+    pendingTasks = [];
+    tickCount = 0;
+    $('.tasks').attr('hidden',true);
+    $('.navbar').attr('hidden',true);
+    $('.login').attr('hidden',false);
+}
+
 //Fetch list of tasks from api
-function fetchList(callback){
+function fetchList(callback,errorHandler){
+    htmlContent = "<p class='boxMessage'>Loading..</p>"
+    $('.pending-tasks').html(htmlContent);
+    $('.completed-tasks').html(htmlContent);
     $.getJSON(URL,function(response, status){
         if(status === 'success'){
             callback(response);
         }
         else{
-            // Error handling
+            errorHandler(status);
         }
     });
+}
+
+function errorHandler(errText){
+    htmlContent = "<p class='boxMessage'>Sorry! Unable to fetch tasks.</p>"
+    $('.pending-tasks').html(htmlContent);
+    $('.completed-tasks').html(htmlContent);
 }
 
 function loadList(list){
