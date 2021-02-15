@@ -18,7 +18,10 @@
 
 <body>
     <div class="container-fluid">
+        <!-- Login -->
         <div class="login">
+            <h1>To-Do</h1>
+            <h4>Welcome back</h4>
             <div class="box">
                 <form>
                     <div class="form-group">
@@ -31,8 +34,9 @@
                         <p id="loginValidationMessage"></p>
                         <p id="toggle-pwd" toggleStat="hide" onclick='togglePassword(this);'>Show password <i class="far fa-eye-slash"></i></p>
                     </div>
-                    <button type="button" class="btn btn-info" onclick="return validateLogin();">Sign in</button>
+                    <button type="button" class="btn btn-info btn-block" onclick="return validateLogin();">Log in</button>
                 </form>
+                <h6>Just do it!</h6>
             </div>
         </div>
         <!-- /Login -->
@@ -40,11 +44,11 @@
         <!-- Tasks -->
         <div class="row d-flex-inline justify-content-around flex-md-row tasks" hidden>
             <div class="box">
-                <h4>Things to do...</h4>
+                <h2>Things to do...</h2>
                 <div class="pending-tasks overflow-auto"></div>
             </div>
             <div class="box">
-                <h4>Already done!</h4>
+                <h2>Already done!</h2>
                 <div class="completed-tasks overflow-auto"></div>
             </div>
         </div>

@@ -97,7 +97,8 @@ function displayCompletedTasks(){
     let htmlContent = "<table class='table table-borderless table-hover'>";
     for(let i in completedTasks){
         htmlContent += "<tr>";
-        htmlContent += `<td class="text-truncate" style="max-width: 15vw">${(completedTasks[i].title)}</td>`;
+        htmlContent += `<td class="text-truncate" style="max-width: 15vw"><input type="checkbox" checked disabled=true">`;
+        htmlContent += ` <s>${(completedTasks[i].title)}</s></td>`;
         htmlContent += "</tr>";
     }
     htmlContent += "</table>";

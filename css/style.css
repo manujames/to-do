@@ -16,14 +16,30 @@ body{
 
 .login{
     max-width: 400px;
-    margin: 30vh auto;
+    margin: 15vh auto;
+}
+
+.login h1{
+    color: #FFFFFF;
+    font-size: 80px;
+    text-align: center;
+}
+
+.login h4{
+    color: #a8dadc;
+    text-align: center;
+}
+
+.login h6{
+    padding-top: 10px;
+    color: #457b9d;
+    text-align: center;
 }
 
 #loginValidationMessage{
     font-size: small;
     margin: 1px;
     color: #dc3545;
-    
 }
 
 #toggle-pwd{
@@ -35,6 +51,12 @@ body{
     margin-top: 15vh;
     height: 80vh;
 }
+
+.tasks h2{
+    text-align: center;
+    color: #1D3557;
+}
+
 .pending-tasks{
     width: 60vw;
     height: 60vh;
