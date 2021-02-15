@@ -1,5 +1,5 @@
-const USERNAME = 'admin';
-const PASSWORD = '12345';
+const USERNAME = '';
+const PASSWORD = '';
 const URL = 'https://jsonplaceholder.typicode.com/todos';
 var completedTasks = [];
 var pendingTasks = [];
@@ -92,37 +92,60 @@ function loadList(list){
 }
 
 function refreshLists(){
+    let completedIndices = [];
     for (let i in pendingTasks){
         if(pendingTasks[i].completed){
             completedTasks.unshift(pendingTasks[i]);
-            pendingTasks.splice(i,1);
+            // Store indices to remove from pending tasks in a seperate array
+            completedIndices.push(i);
         }
     }
-    displayPendingTasks();
+    for(let i in completedIndices){
+        // Fade out this item.
+        $(`.pending-tasks table tr:nth-child(${parseInt(completedIndices[i]) + 1})`).fadeOut(300);
+        // Remove the item at previously selected indices from pendingTasks array
+        // completedIndices[i]-i is used for adjusting the mismatch in index due to removing elements from pendingTasks array
+        pendingTasks.splice(completedIndices[i]-i,1);
+    }
+    setTimeout(displayPendingTasks,300);
     displayCompletedTasks();
+    // Fade in newly added 5 items in completed tasks list.
+    $('.completed-tasks table tr:nth-child(-n+5)').fadeOut(1).fadeIn(300);
 }
 
 function displayPendingTasks(){
-    let htmlContent = "<table class='table table-borderless table-hover'>";
-    for(let i in pendingTasks){
-        htmlContent += "<tr>";
-        htmlContent += `<td class="text-truncate" style="max-width: 50vw"><input type="checkbox" id=${i} onchange="countCheckBox(this);">`;
-        htmlContent += ` ${pendingTasks[i].title}</td>`;
-        htmlContent += "</tr>";
+    let htmlContent = "";
+    if(pendingTasks.length){
+        htmlContent += "<table class='table table-borderless table-hover'>";
+        for(let i in pendingTasks){
+            htmlContent += "<tr>";
+            htmlContent += `<td class="text-truncate" style="max-width: 50vw"><input type="checkbox" id=${i} onchange="countCheckBox(this);">`;
+            htmlContent += ` ${pendingTasks[i].title}</td>`;
+            htmlContent += "</tr>";
+        }
+        htmlContent += "</table>";
     }
-    htmlContent += "</table>";
+    else{
+        htmlContent += "<p class='boxMessage'>Hurray!! Everything done.</p>"
+    }
     $('.pending-tasks').html(htmlContent);
 }
 
 function displayCompletedTasks(){
-    let htmlContent = "<table class='table table-borderless table-hover'>";
-    for(let i in completedTasks){
-        htmlContent += "<tr>";
-        htmlContent += `<td class="text-truncate" style="max-width: 15vw"><input type="checkbox" checked disabled=true">`;
-        htmlContent += ` <s>${(completedTasks[i].title)}</s></td>`;
-        htmlContent += "</tr>";
+    let htmlContent = "";
+    if(completedTasks.length){
+        htmlContent += "<table class='table table-borderless table-hover'>";
+        for(let i in completedTasks){
+            htmlContent += "<tr>";
+            htmlContent += `<td class="text-truncate" style="max-width: 15vw"><input type="checkbox" checked disabled=true">`;
+            htmlContent += ` <s>${(completedTasks[i].title)}</s></td>`;
+            htmlContent += "</tr>";
+        }
+        htmlContent += "</table>";
     }
-    htmlContent += "</table>";
+    else{
+        htmlContent += "<p class='boxMessage'>Nothing to show here.</p>"
+    }
     $('.completed-tasks').html(htmlContent);
 }
 
