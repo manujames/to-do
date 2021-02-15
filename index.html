@@ -18,47 +18,35 @@
 
 <body>
     <div class="container-fluid">
-        <!-- Login -->
         <div class="login">
-            <div class="row">
-                <div class="col-lg-4 col-sm-3 col-1"></div>
-                <div class="col-lg-4 col-sm-6 col-10 box">
-                    <form>
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username">
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password">
-                            <p id="loginValidationMessage"></p>
-                            <p id="toggle-pwd" toggleStat="hide" onclick='togglePassword(this);'>Show password <i class="far fa-eye-slash"></i></p>
-                        </div>
-                        <button type="button" class="btn btn-info" onclick="return validateLogin();">Sign in</button>
-                    </form>
-                </div>
-                <div class="col-lg-4 col-sm-3 col-1"></div>
+            <div class="box">
+                <form>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username">
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password">
+                        <p id="loginValidationMessage"></p>
+                        <p id="toggle-pwd" toggleStat="hide" onclick='togglePassword(this);'>Show password <i class="far fa-eye-slash"></i></p>
+                    </div>
+                    <button type="button" class="btn btn-info" onclick="return validateLogin();">Sign in</button>
+                </form>
             </div>
         </div>
         <!-- /Login -->
         
         <!-- Tasks -->
-        <div class="row tasks" hidden>
-            <div class="col-md-1"></div>
-            <div class="col-md-5 col-12 box">
-                <h4>Things to do</h4>
-                <div class="pending-tasks">
-
-                </div>
+        <div class="row d-flex-inline justify-content-around flex-md-row tasks" hidden>
+            <div class="box">
+                <h4>Things to do...</h4>
+                <div class="pending-tasks overflow-auto"></div>
             </div>
-            <div class="col-md-1"></div>
-            <div class="col-md-4 col-12 box">
+            <div class="box">
                 <h4>Already done!</h4>
-                <div class="completed-tasks">
-
-                </div>
+                <div class="completed-tasks overflow-auto"></div>
             </div>
-            <div class="col-md-1"></div>
         </div>
         <!-- /Tasks -->
     </div>

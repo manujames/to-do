@@ -11,10 +11,12 @@ body{
     background-color: #FFFFFF;
     border-radius: 20px;
     padding: 20px;
+    margin: 20px;
 }
 
 .login{
-    margin-top: 30vh;
+    max-width: 400px;
+    margin: 30vh auto;
 }
 
 #loginValidationMessage{
@@ -34,9 +36,17 @@ body{
     height: 80vh;
 }
 .pending-tasks{
-
+    width: 60vw;
+    height: 60vh;
 }
 
 .completed-tasks{
+    width: 20vw;
+    height: 60vh;
+}
 
+@media (max-width: 992px){
+    .completed-tasks{
+        width: 60vw;
+    }
 }

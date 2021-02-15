@@ -85,7 +85,7 @@ function displayPendingTasks(){
     let htmlContent = "<table class='table table-borderless table-hover'>";
     for(let i in pendingTasks){
         htmlContent += "<tr>";
-        htmlContent += `<td><input type="checkbox" id=${i} onchange="countCheckBox(this);">`;
+        htmlContent += `<td class="text-truncate" style="max-width: 50vw"><input type="checkbox" id=${i} onchange="countCheckBox(this);">`;
         htmlContent += ` ${pendingTasks[i].title}</td>`;
         htmlContent += "</tr>";
     }
@@ -97,7 +97,7 @@ function displayCompletedTasks(){
     let htmlContent = "<table class='table table-borderless table-hover'>";
     for(let i in completedTasks){
         htmlContent += "<tr>";
-        htmlContent += `<td>${strTruncate(completedTasks[i].title,20)}</td>`;
+        htmlContent += `<td class="text-truncate" style="max-width: 15vw">${(completedTasks[i].title)}</td>`;
         htmlContent += "</tr>";
     }
     htmlContent += "</table>";
@@ -132,13 +132,4 @@ function doneFiveTasks(input){
             resolve();
         }
     });
-}
-
-function strTruncate(str,length){
-    if(str.length <= length){
-        return str;
-    }
-    else{
-        return (str.substring(0,length).trim() + '...');
-    }
 }
