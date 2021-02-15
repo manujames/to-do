@@ -71,11 +71,16 @@ body{
 
 .completed-tasks{
     width: 20vw;
-    height: 60vh;
+    height: 30vh;
+}
+
+.calendar{
+    width: 20vw;
+    height: 21vh;
 }
 
 @media (max-width: 992px){
-    .completed-tasks{
-        width: 60vw;
+    .pending-tasks, .completed-tasks, .calendar{
+        width: 70vw;
     }
 }

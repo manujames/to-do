@@ -49,9 +49,9 @@ function validateLogin(){
 function logout(){
     $('#username').val('');
     $('#password').val('');
-    completedTasks = [];
-    pendingTasks = [];
-    tickCount = 0;
+    // completedTasks = [];
+    // pendingTasks = [];
+    // tickCount = 0;
     $('.tasks').attr('hidden',true);
     $('.navbar').attr('hidden',true);
     $('.login').attr('hidden',false);
@@ -62,14 +62,22 @@ function fetchList(callback,errorHandler){
     htmlContent = "<p class='boxMessage'>Loading..</p>"
     $('.pending-tasks').html(htmlContent);
     $('.completed-tasks').html(htmlContent);
-    $.getJSON(URL,function(response, status){
-        if(status === 'success'){
-            callback(response);
-        }
-        else{
-            errorHandler(status);
-        }
-    });
+    // Load existing list of tasks if available in memory
+    // Else fetch from api
+    if(pendingTasks.length || completedTasks.length){
+        displayPendingTasks();
+        displayCompletedTasks();
+    }
+    else{
+        $.getJSON(URL,function(response, status){
+            if(status === 'success'){
+                callback(response);
+            }
+            else{
+                errorHandler(status);
+            }
+        });
+    }
 }
 
 function errorHandler(errText){
@@ -80,6 +88,8 @@ function errorHandler(errText){
 
 function loadList(list){
     for (let i in list){
+        list[i].priority = "none";
+        list[i].date = "";
         if(list[i].completed){
             completedTasks.push(list[i]);
         }
@@ -116,11 +126,49 @@ function refreshLists(){
 function displayPendingTasks(){
     let htmlContent = "";
     if(pendingTasks.length){
-        htmlContent += "<table class='table table-borderless table-hover'>";
+        htmlContent += "<table class='table table-borderless'>";
         for(let i in pendingTasks){
-            htmlContent += "<tr>";
-            htmlContent += `<td class="text-truncate" style="max-width: 50vw"><input type="checkbox" id=${i} onchange="countCheckBox(this);">`;
-            htmlContent += ` ${pendingTasks[i].title}</td>`;
+            if(pendingTasks[i].priority === 'high') htmlContent += "<tr class='table-danger'>";
+            else if(pendingTasks[i].priority === 'medium') htmlContent += "<tr class='table-warning'>";
+            else if(pendingTasks[i].priority === 'low') htmlContent += "<tr class='table-primary'>";
+            else htmlContent += "<tr>";
+            htmlContent += `<td class="text-truncate" style="max-width: 250px; min-width:100px">`;
+            htmlContent += `<input type="checkbox" id=${i} onchange="countCheckBox(this);"`
+            if(pendingTasks[i].completed) htmlContent += ' checked ';
+            htmlContent += `>`;
+            htmlContent += ` ${pendingTasks[i].title}`;
+            htmlContent += `</td>`;
+
+            htmlContent += '<td>';
+            htmlContent += '<label>Due date:</label> ';
+            htmlContent += `<input type="date" id= "dt_${i}" value="${pendingTasks[i].date}" style="height:20px; width:145px;" onchange="setDate(this);">`;
+            htmlContent += '</td>';
+            
+            htmlContent += `<td>`;
+            htmlContent += "<label>Priority:</label> ";
+            htmlContent += `<select name='dd_${i}' id='dd_${i}' onchange='setPriority(this);'>`;
+            htmlContent += "<option value='none'"; 
+            if(pendingTasks[i].priority === 'none'){
+                htmlContent += " selected";
+            }
+            htmlContent += ">-</option>";
+            htmlContent += "<option value='high'"; 
+            if(pendingTasks[i].priority === 'high'){
+                htmlContent += " selected";
+            }
+            htmlContent += ">High</option>";
+            htmlContent += "<option value='medium'"; 
+            if(pendingTasks[i].priority === 'medium'){
+                htmlContent += " selected";
+            }
+            htmlContent += ">Medium</option>";
+            htmlContent += "<option value='low'"; 
+            if(pendingTasks[i].priority === 'low'){
+                htmlContent += " selected";
+            }
+            htmlContent += ">Low</option>";
+            htmlContent += "</select>"
+            htmlContent += `</td>`;
             htmlContent += "</tr>";
         }
         htmlContent += "</table>";
@@ -134,7 +182,7 @@ function displayPendingTasks(){
 function displayCompletedTasks(){
     let htmlContent = "";
     if(completedTasks.length){
-        htmlContent += "<table class='table table-borderless table-hover'>";
+        htmlContent += "<table class='table table-borderless'>";
         for(let i in completedTasks){
             htmlContent += "<tr>";
             htmlContent += `<td class="text-truncate" style="max-width: 15vw"><input type="checkbox" checked disabled=true">`;
@@ -147,6 +195,18 @@ function displayCompletedTasks(){
         htmlContent += "<p class='boxMessage'>Nothing to show here.</p>"
     }
     $('.completed-tasks').html(htmlContent);
+}
+
+function setPriority(input){
+    let index = input.id.substring(3);
+    pendingTasks[index].priority = input.value;
+    displayPendingTasks();
+}
+
+function setDate(input){
+    let index = input.id.substring(3);
+    pendingTasks[index].date = input.value;
+    displayPendingTasks();
 }
 
 function countCheckBox(input){
