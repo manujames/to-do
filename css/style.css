@@ -37,12 +37,6 @@ body{
     text-align: center;
 }
 
-.login h6{
-    padding-top: 10px;
-    color: #457b9d;
-    text-align: center;
-}
-
 #loginValidationMessage{
     font-size: small;
     margin: 1px;
@@ -55,8 +49,7 @@ body{
 }
 
 .tasks{
-    margin-top: 5vh;
-    height: 80vh;
+    margin-top: 15vh;
 }
 
 .tasks h2{
@@ -64,23 +57,27 @@ body{
     color: #1D3557;
 }
 
+.task-controls{
+    margin-bottom: 5px;
+}
+
 .pending-tasks{
     width: 60vw;
-    height: 60vh;
+    height: 55vh;
 }
 
 .completed-tasks{
     width: 20vw;
-    height: 30vh;
-}
-
-.calendar{
-    width: 20vw;
-    height: 21vh;
+    height: 60vh;
 }
 
 @media (max-width: 992px){
-    .pending-tasks, .completed-tasks, .calendar{
+    .pending-tasks{
         width: 70vw;
+        height: 62vh;
+    }
+    .completed-tasks{
+        width: 70vw;
+        height: 72vh;
     }
 }

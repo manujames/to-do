@@ -18,7 +18,7 @@
 
 <body>
     <!-- Navbar -->
-    <nav class='navbar navbar-dark' style="background-color:#1D3557; height: 10vh; min-height: 80px;" hidden>
+    <nav class='navbar navbar-dark fixed-top' style="background-color:#1D3557; height: 10vh; min-height: 80px;" hidden>
         <a class="navbar-brand">
             <img src="./images/logo.gif" width="40" height="40" class="d-inline-block align-center" alt="">
             To-Do
@@ -48,7 +48,7 @@
                     </div>
                     <button type="button" class="btn btn-info btn-block" onclick="return validateLogin();">Log in</button>
                 </form>
-                <h6>Just do it!</h6>
+                <br>
             </div>
         </div>
         <!-- /Login -->
@@ -57,18 +57,24 @@
         <div class="row d-flex-inline justify-content-around flex-md-row tasks" hidden>
             <div class="box">
                 <h2>Things to do...</h2>
-                <div class="pending-tasks overflow-auto"></div>
-            </div>
-            <div>
-                <div class="box">
-                    <div class="calendar">
-                        
+                <div class="task-controls" hidden>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-info btn-sm disabled">
+                            <input type="radio" id="sort-label" name="sort">Sort by:&nbsp;</input>
+                        </label>
+                        <label class="btn btn-secondary btn-sm">
+                            <input type="radio" id="priority" name="sort" value="priority" onclick="sortByPriority();">Priority</input>
+                        </label>
+                        <label class="btn btn-secondary btn-sm">
+                            <input type="radio" id="date" name="sort" value="date" onclick="sortByDate();">Date</input>
+                        </label>
                     </div>
                 </div>
-                <div class="box">
-                    <h2>Already done!</h2>
-                    <div class="completed-tasks overflow-auto"></div>
-                </div>
+                <div class="pending-tasks overflow-auto"></div>
+            </div>
+            <div class="box">
+                <h2>Already done!</h2>
+                <div class="completed-tasks overflow-auto"></div>
             </div>
         </div>
         <!-- /Tasks -->

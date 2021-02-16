@@ -1,13 +1,9 @@
-const USERNAME = '';
-const PASSWORD = '';
+const USERNAME = 'admin';
+const PASSWORD = '12345';
 const URL = 'https://jsonplaceholder.typicode.com/todos';
 var completedTasks = [];
 var pendingTasks = [];
 var tickCount = 0;
-
-$(document).ready(function(){
-    
-});
 
 // Toggle password display
 function togglePassword(field){
@@ -29,6 +25,7 @@ function togglePassword(field){
 }
 
 // Verify username and password
+// Hide/show page elements
 function validateLogin(){
     let username = $('#username').val();
     let password = $('#password').val();
@@ -46,12 +43,11 @@ function validateLogin(){
     }
 }
 
+// Hide/show page elements
 function logout(){
     $('#username').val('');
     $('#password').val('');
-    // completedTasks = [];
-    // pendingTasks = [];
-    // tickCount = 0;
+    $('.task-controls').attr('hidden',true);
     $('.tasks').attr('hidden',true);
     $('.navbar').attr('hidden',true);
     $('.login').attr('hidden',false);
@@ -59,7 +55,8 @@ function logout(){
 
 //Fetch list of tasks from api
 function fetchList(callback,errorHandler){
-    htmlContent = "<p class='boxMessage'>Loading..</p>"
+    let apiResponse;
+    let htmlContent = "<p class='boxMessage'>Loading..</p>"
     $('.pending-tasks').html(htmlContent);
     $('.completed-tasks').html(htmlContent);
     // Load existing list of tasks if available in memory
@@ -69,7 +66,8 @@ function fetchList(callback,errorHandler){
         displayCompletedTasks();
     }
     else{
-        $.getJSON(URL,function(response, status){
+        apiResponse = $.getJSON(URL);
+        apiResponse.done(function(response, status){
             if(status === 'success'){
                 callback(response);
             }
@@ -77,11 +75,15 @@ function fetchList(callback,errorHandler){
                 errorHandler(status);
             }
         });
+        apiResponse.fail(function(response,status){
+            errorHandler(status);
+        });
     }
 }
 
 function errorHandler(errText){
-    htmlContent = "<p class='boxMessage'>Sorry! Unable to fetch tasks.</p>"
+    let htmlContent = "<p class='boxMessage'>Sorry! Unable to fetch tasks.</p>";
+    $('.task-controls').attr('hidden',true);
     $('.pending-tasks').html(htmlContent);
     $('.completed-tasks').html(htmlContent);
 }
@@ -119,14 +121,43 @@ function refreshLists(){
     }
     setTimeout(displayPendingTasks,300);
     displayCompletedTasks();
-    // Fade in newly added 5 items in completed tasks list.
-    $('.completed-tasks table tr:nth-child(-n+5)').fadeOut(1).fadeIn(300);
+    // Fade in newly added items in completed tasks list.
+    $(`.completed-tasks table tr:nth-child(-n+${tickCount})`).fadeOut(1).fadeIn(300);
+}
+
+function sortByPriority(){
+    pendingTasks.sort(function(a,b){
+        let priorities = {
+            none: 0,
+            low: 1,
+            medium: 2,
+            high: 3
+        };
+        return priorities[b.priority] - priorities[a.priority];
+    });
+    displayPendingTasks();
+    $('.pending-tasks').fadeOut(1).fadeIn(300);
+}
+
+function sortByDate(){
+    pendingTasks.sort(function(a,b){
+        let date_a = new Date(a.date);
+        let date_b = new Date(b.date);
+        if(date_a != 'Invalid Date' && date_b == 'Invalid Date') return -1;         //Sort a first
+        else if(date_a == 'Invalid Date' && date_b != 'Invalid Date') return 1;     //Sort b first
+        else if(date_a == 'Invalid Date' && date_b == 'Invalid Date') return 0;     //No change
+        else if(date_a<date_b) return -1;                                           //Sort a first
+        else if(date_a>date_b) return 1;                                            //Sort b first
+        else return 0;                                                              //No change
+    });
+    displayPendingTasks();
+    $('.pending-tasks').fadeOut(1).fadeIn(300);
 }
 
 function displayPendingTasks(){
     let htmlContent = "";
     if(pendingTasks.length){
-        htmlContent += "<table class='table table-borderless'>";
+        htmlContent += "<table class='table table-borderless table-hover'>";
         for(let i in pendingTasks){
             if(pendingTasks[i].priority === 'high') htmlContent += "<tr class='table-danger'>";
             else if(pendingTasks[i].priority === 'medium') htmlContent += "<tr class='table-warning'>";
@@ -141,7 +172,7 @@ function displayPendingTasks(){
 
             htmlContent += '<td>';
             htmlContent += '<label>Due date:</label> ';
-            htmlContent += `<input type="date" id= "dt_${i}" value="${pendingTasks[i].date}" style="height:20px; width:145px;" onchange="setDate(this);">`;
+            htmlContent += `<input type="date" id= "dt_${i}" value="${pendingTasks[i].date}" style="height:20px;" onchange="setDate(this);">`;
             htmlContent += '</td>';
             
             htmlContent += `<td>`;
@@ -172,9 +203,11 @@ function displayPendingTasks(){
             htmlContent += "</tr>";
         }
         htmlContent += "</table>";
+        $('.task-controls').attr('hidden',false);
     }
     else{
-        htmlContent += "<p class='boxMessage'>Hurray!! Everything done.</p>"
+        htmlContent += "<p class='boxMessage'>Hurray!! Everything done.</p>";
+        $('.task-controls').attr('hidden',true);
     }
     $('.pending-tasks').html(htmlContent);
 }
@@ -182,7 +215,7 @@ function displayPendingTasks(){
 function displayCompletedTasks(){
     let htmlContent = "";
     if(completedTasks.length){
-        htmlContent += "<table class='table table-borderless'>";
+        htmlContent += "<table class='table table-borderless table-hover'>";
         for(let i in completedTasks){
             htmlContent += "<tr>";
             htmlContent += `<td class="text-truncate" style="max-width: 15vw"><input type="checkbox" checked disabled=true">`;
@@ -211,11 +244,10 @@ function setDate(input){
 
 function countCheckBox(input){
     doneFiveTasks(input)
+    .then(showAlert)
+    .then(refreshLists)
     .then(function(){
-        setTimeout(function(){
-            alert("Yay! You've completed five tasks.");
-            refreshLists();
-        },100)
+        tickCount = 0;
     });
 }
 
@@ -233,8 +265,18 @@ function doneFiveTasks(input){
             }
         }
         if(tickCount >= 5){
-            tickCount = 0;
             resolve();
         }
+    });
+}
+
+function showAlert(){
+    return new Promise(function(resolve){
+        setTimeout(function(){
+            let userResponse = confirm(`Congrats! You've done ${tickCount} tasks.\nMove those to the completed section?`);
+            if(userResponse == true){
+                resolve();
+            }
+        },100);
     });
 }
