@@ -153,31 +153,88 @@ function sortByDate(){
     displayPendingTasks();
     $('.pending-tasks').fadeOut(1).fadeIn(300);
 }
+function addTask(){
+    let task = $('#input_task');
+    let date = $('#input_date');
+    let priority = $('#input_priority');
+    if(task.val() !== ''){
+        let taskObj = {
+            userId: 0,
+            id: 0,
+            title: task.val(),
+            date: date.val(),
+            priority: priority.val()
+        };
+        pendingTasks.unshift(taskObj);
+        displayPendingTasks();
+    }
+    else{
+        task.addClass('is-invalid');
+        task.attr('placeholder','Type your task here');
+    }
+}
 
 function displayPendingTasks(){
     let htmlContent = "";
+    // Table
+    htmlContent += "<table class='table table-borderless table-hover table-sm'>";
+    // New item input row
+    htmlContent += "<tr class='table-active'>";
+    // Add button
+    htmlContent += "<td>";
+    htmlContent += "<button type='button' class='btn btn-dark btn-sm btn-block' onclick='addTask();'>";
+    htmlContent += "<i class='fa fa-calendar-plus-o'></i>";
+    htmlContent += "</button>";
+    htmlContent += "</td>";
+    // New Task
+    htmlContent += "<td>";
+    htmlContent += `<input id="input_task" class="form-control form-control-sm" type="text" placeholder="Add new task">`;
+    // Date selector
+    htmlContent += '<td>';
+    htmlContent += `<label for="input_date">Due date:</label> `;
+    htmlContent += `<input type="date" id= "input_date" style="height:30px;">`;
+    htmlContent += '</td>';
+    // Priority selector
+    htmlContent += "<td>";
+    htmlContent += `<label for='input_priority'>Priority:</label> `;
+    htmlContent += `<select name='input_priority' id='input_priority' style="height:30px;"'>`;
+    htmlContent += "<option value='none' selected>-</option>";
+    htmlContent += "<option value='high'>High</option>";
+    htmlContent += "<option value='medium'>Medium</option>";
+    htmlContent += "<option value='low'>Low</option>";
+    htmlContent += "</select>"
+    htmlContent += `</td>`;
+    htmlContent += "</tr>"; //Row end
+    // Tasks
     if(pendingTasks.length){
-        htmlContent += "<table class='table table-borderless table-hover'>";
         for(let i in pendingTasks){
+            // Priority color code
             if(pendingTasks[i].priority === 'high') htmlContent += "<tr class='table-danger'>";
             else if(pendingTasks[i].priority === 'medium') htmlContent += "<tr class='table-warning'>";
             else if(pendingTasks[i].priority === 'low') htmlContent += "<tr class='table-primary'>";
             else htmlContent += "<tr>";
-            htmlContent += `<td class="text-truncate" style="max-width: 250px; min-width:100px">`;
-            htmlContent += `<input type="checkbox" id=${i} onchange="countCheckBox(this);"`
+            // Checkbox
+            htmlContent += '<td>';
+            htmlContent += '<div class="custom-control custom-checkbox">';
+            htmlContent += `<input type="checkbox" id=${i} class="custom-control-input" style="height:30px;" onchange="countCheckBox(this);"`;
             if(pendingTasks[i].completed) htmlContent += ' checked ';
             htmlContent += `>`;
+            htmlContent += `<label class="custom-control-label" for="${i}"></label>`;
+            htmlContent += '</div>';
+            htmlContent += '</td>';
+            // Task
+            htmlContent += `<td class="text-truncate" style="max-width: 230px;">`;
             htmlContent += ` ${pendingTasks[i].title}`;
             htmlContent += `</td>`;
-
+            // Date selector
             htmlContent += '<td>';
-            htmlContent += '<label>Due date:</label> ';
-            htmlContent += `<input type="date" id= "dt_${i}" value="${pendingTasks[i].date}" style="height:20px;" onchange="setDate(this);">`;
+            htmlContent += `<label for="dt_${i}">Due date:</label> `;
+            htmlContent += `<input type="date" id= "dt_${i}" value="${pendingTasks[i].date}" style="height:30px;" onchange="setDate(this);">`;
             htmlContent += '</td>';
-            
-            htmlContent += `<td>`;
-            htmlContent += "<label>Priority:</label> ";
-            htmlContent += `<select name='dd_${i}' id='dd_${i}' onchange='setPriority(this);'>`;
+            // Priority selector
+            htmlContent += "<td>";
+            htmlContent += `<label for='dd_${i}'>Priority:</label> `;
+            htmlContent += `<select name='dd_${i}' id='dd_${i}' style="height:30px;" onchange='setPriority(this);'>`;
             htmlContent += "<option value='none'"; 
             if(pendingTasks[i].priority === 'none'){
                 htmlContent += " selected";
@@ -200,12 +257,13 @@ function displayPendingTasks(){
             htmlContent += ">Low</option>";
             htmlContent += "</select>"
             htmlContent += `</td>`;
-            htmlContent += "</tr>";
+            htmlContent += "</tr>"; //Row end
         }
-        htmlContent += "</table>";
+        htmlContent += "</table>";  //Table end
         $('.task-controls').attr('hidden',false);
     }
     else{
+        htmlContent += "</table>";  //Table end
         htmlContent += "<p class='boxMessage'>Hurray!! Everything done.</p>";
         $('.task-controls').attr('hidden',true);
     }
@@ -215,7 +273,7 @@ function displayPendingTasks(){
 function displayCompletedTasks(){
     let htmlContent = "";
     if(completedTasks.length){
-        htmlContent += "<table class='table table-borderless table-hover'>";
+        htmlContent += "<table class='table table-borderless table-hover table-sm'>";
         for(let i in completedTasks){
             htmlContent += "<tr>";
             htmlContent += `<td class="text-truncate" style="max-width: 15vw"><input type="checkbox" checked disabled=true">`;
